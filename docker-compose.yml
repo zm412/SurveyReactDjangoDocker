@@ -1,0 +1,44 @@
+version: "3.9"
+   
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=capstone_db
+      - POSTGRES_USER=zm412
+      - POSTGRES_PASSWORD=tazhbaeva1
+  frontend:
+    restart: always
+    build:
+      context: ./djangoapp/frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    stdin_open: true
+    command: npm run dev 
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./djangoapp/frontend:/code/
+      - ./djangoapp/static/djangoapp/:/code/dist/
+      #- /code/dist/
+      #- ./djangoapp/frontend/dist:/djangoapp/frontend/dist
+      #- ./djangoapp/frontend:/djangoapp/frontend
+      # One-way volume to use node_modules from inside image
+      - /code/node_modules
+  backend:
+    build: .
+    ports:
+      - "8000:8000"
+    command : sh -c " python manage.py makemigrations djangoapp && 
+                      python manage.py migrate &&
+                      python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+      #- /code/djangoapp/static/djangoapp/
+    depends_on:
+      - db
+      - frontend
+
