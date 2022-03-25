@@ -1,16 +1,16 @@
 
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 import { Button } from 'react-bootstrap';
-import  QuestionsService  from  '../../routers/QuestionsService';
 import  QuestionsList  from './questions_components/QuestionsList';
 import  { QuestionForm }  from './questions_components/QuestionForm';
+import { Context } from "../../Context";
 
 
 export const QuestionTab = () => {
-  const questionService  =  new QuestionsService();
+  const [context, setContext] = useContext(Context);
 
-  questionService.getQuestions()
-    .then(doc => console.log(doc, 'doc'))
+
+  console.log(context, 'context')
 
   return (
     <div className="m-3" >

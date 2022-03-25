@@ -1,34 +1,38 @@
 
-import React, { Component } from 'react';
+import React, { Component} from 'react';
 import { Button } from 'react-bootstrap';
 import  OptionsService  from  '../../../routers/OptionsService';
 import  { OptionsList }  from  './OptionsList';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
+import { Context } from "../../../Context";
+
+
 
 const optionsService = new OptionsService();
 
 export const Options_mini_form = () => {
 
-  const [allOptions, setAllOptions] = React.useState([]);
-  const [currOption, setCurrOption] = React.useState('');
-  const [currOptionList, setCurrOptionList] = React.useState([]);
+  const [allOptions, setAllOptions] = useState([]);
+  const [currOption, setCurrOption] = useState('');
+  const [currOptionList, setCurrOptionList] = useState([]);
+  const [context, setContext] = useContext(Context);
+  console.log(context, 'context2')
 
   React.useEffect(() => {
     optionsService.getOptions().then(result => { setAllOptions(result.data) });
   }, []);
-    console.log(allOptions, 'allOpt')
-
-
-  console.log(currOptionList, 'list')
-  console.log(currOption, 'currOption')
 
   const handlerSubmit = (event) => {
     cleanUl();
     event.preventDefault();
-    console.log(currOption, 'currOpt')
-    setCurrOptionList(currOptionList.concat(currOption));
-    setCurrOption('');
-    console.log(currOptionList, 'tempList')
+    if(currOption != ''){
+      setCurrOptionList(currOptionList.concat(currOption));
+      context.optionsList = currOptionList.concat(currOption);
+      setContext(context)
+      setCurrOption('');
+  console.log(context, 'context3')
+  console.log(currOptionList, 'currlist')
+    }
   }
 
   const addLiValueInInput = (event) => {
@@ -62,12 +66,12 @@ export const Options_mini_form = () => {
 
   const handlerInput = (e) => {
     setCurrOption(e.target.value);
-    cleanUl()
+    cleanUl();
   }
 
   const handlerRemoveOpt = (e) => {
-    indexD = e.target.dataset.index;
-    setCurrOptionList(currOptionList.splice(indexD, 1));
+    let indexD = e.target.dataset.index;
+    setCurrOptionList(currOptionList.filter((n, i) => i != indexD));
   }
 
 

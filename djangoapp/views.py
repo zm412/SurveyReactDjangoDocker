@@ -64,12 +64,13 @@ def questions_list(request):
         })
 
     elif request.method == 'POST':
+        print(request.POST, 'rellkjljljljkOIOIUOIUOIU')
         new_quest = Question(user=request.user)
         serializer = QuestionSerializer(data=request.data, instance=new_quest)
         if serializer.is_valid():
             serializer.user=request.user
             serializer.save()
-            listArr = [ request.POST['opt1'],request.POST['opt2'],request.POST['opt3'],request.POST['opt4'],request.POST['opt5']]
+            listArr = request.POST['optionsList']
             print(listArr, 'listArr')
             for k in listArr:
                 try:

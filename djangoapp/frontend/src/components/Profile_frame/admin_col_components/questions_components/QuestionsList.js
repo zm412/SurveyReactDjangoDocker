@@ -18,7 +18,6 @@ class QuestionsList extends Component {
 componentDidMount() {
 	var  self  =  this;
 	questionsService.getQuestions().then(function (result) {
-		console.log(result);
 		self.setState({ questions:  result.data, nextPageURL:  result.nextlink})
 	});
 }

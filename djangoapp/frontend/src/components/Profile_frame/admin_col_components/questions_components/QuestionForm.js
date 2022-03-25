@@ -3,19 +3,28 @@ import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
 import  QuestionsService  from  '../../../routers/QuestionsService';
 import  { Options_mini_form }  from  '../options_components/Options_mini_form';
-import {useState, useEffect} from 'react';
+import {useState, useEffect, useContext} from 'react';
+import { Context } from "../../../Context";
 
 const questionsService = new QuestionsService();
 
 export const QuestionForm = () => {
 
-  const [questionText, setQuestion] = React.useState('');
-  const [questType, setQuestType] = React.useState('single_choice');
+  const [questionText, setQuestion] = useState('');
+  const [questType, setQuestType] = useState('single_choice');
+  const [optionsList, setOptionsList] = useState([]);
+
+  const [context, setContext] = useContext(Context);
+  console.log(context, 'context0')
 
   const handlerSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    questionsService.createQuestion(formData).then(result => { console.log(result, 'result');
+    formData.append('optionsList', context.optionsList)
+    console.log(formData, 'formData')
+
+    questionsService.createQuestion(formData).then(result => { 
+      console.log(result, 'result');
     });
   }
 
@@ -37,7 +46,7 @@ export const QuestionForm = () => {
             <option value="multiple_choice">Multiple choice</option>
             <option value="text_answ">Text answer</option>
           </select><br/>
-        <Options_mini_form />
+        <Options_mini_form optionsList={optionsList} />
        <input type="submit" />
       </form>
     </div>

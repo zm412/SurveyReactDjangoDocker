@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Profile } from './Profile';
+import { Context } from "./Context.js";
 
 
-class App extends React.Component {
+export default function App() {
 
+  /*
   constructor() {
     super();
     this.state = {
@@ -16,17 +18,25 @@ class App extends React.Component {
     };
   }
    
+   */
+  const [is_super, setIsSuper] = useState("true");
+  const [userid, setUserid] = useState(0);
+  const [username, setUsername] = useState("zm412");
+  const [context, setContext] = useState(null);
 
-  render() {
 
     return (
 
-      <div className="App-header">
-          <div><Profile is_super={ this.state.is_super } userid={this.state.userid} username={this.state.username} /></div>
-      </div>
+    <div className="App-header">
+      <Context.Provider value={[context, setContext]}>
+        <Profile 
+          is_super={is_super} 
+          userid={userid} 
+          username={username} 
+        />
+      </Context.Provider>
+    </div>
           
     );
-  }
 }
 
-export default App;
